@@ -15,10 +15,9 @@ import javafx.stage.Stage;
 public class MainClass extends Application {
 	
 	// TODO: Set logger
-
+	
 	public static void main(final String[] args) {
-		Application.launch(MainClass.class);
-//		launch((String[])null);
+		launch((String[])null);
 	}
 	
 	

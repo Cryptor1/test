@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -23,7 +22,7 @@ import javafx.scene.layout.VBox;
 
 
 /**
- * TODO: Description
+ * Implements file navigation pane.
  * 
  * @author Igor Taranenko
  */
@@ -34,10 +33,8 @@ class NavigatorPane {
 	// Fields private static                                                   *
 	//                                                                         *
 	//**************************************************************************
-	// TODO: Description
 	private static final Logger LOGGER;
 	
-	// TODO: Initialize
 	/** Represents files and folders in the specified folder. */
 	private static final VBox navigatorPane;
 	private static final ObservableList<Node> navigatorPaneChildren;
@@ -60,6 +57,7 @@ class NavigatorPane {
 				addItem(i);
 			}
 		}
+		// TODO: Need to check on Windows
 		// Windows may have several root directories
 		else
 		{
@@ -76,16 +74,63 @@ class NavigatorPane {
 	// Methods package-access static                                           *
 	//                                                                         *
 	//**************************************************************************
-	// TODO: Check for null
-	// TODO: Check for nonexistent directory
 	/**
-	 * TODO: Description
-	 * 
-	 * @param file
-	 * 
-	 * @exception IllegalArgumentException
+	 * Returns object representing file navigation pane.
 	 */
-	static void addItem(final File file) {
+	static VBox getNavigatorPane() {
+		return navigatorPane;
+	}
+	
+	
+	/**
+	 * Opens specified {@code directory}.
+	 * 
+	 * @param directory The directory to open.
+	 * 
+	 * @exception NullPointerException Passed argument is {@code null}.
+	 * 
+	 * @exception IllegalArgumentException Passed argument
+	 * is&nbsp;not&nbsp;a&nbsp;directory.
+	 */
+	static void goInto(final File directory) {
+		if (directory == null) {
+			throw new NullPointerException("Passed argument is 'null'");
+		}
+		if (!directory.exists()) {
+			throw new IllegalArgumentException(
+					"Passed directory does\u00A0not\u00A0exist");
+		}
+		
+		final List<File> files = getFileList(directory);
+		
+		if (files == null) {
+			return;
+		}
+		
+		navigatorPaneChildren.clear();
+		
+		for (final File i : files) {
+			addItem(i);
+		}
+		
+		Breadcrumbs.setBreadcrumbs(directory);
+	}
+	
+	
+	//**************************************************************************
+	//                                                                         *
+	// Methods private static                                                  *
+	//                                                                         *
+	//**************************************************************************
+	/**
+	 * Performs filling file navigation pane with specified {@code file}.
+	 * 
+	 * @param file Item to put into file navigation pane.
+	 * 
+	 * @exception IllegalArgumentException Passed file/folder
+	 * does&nbsp;not&nbsp;exist.
+	 */
+	private static void addItem(final File file) {
 		if (!(file.exists())){
 			throw new IllegalArgumentException("No such file or directory");
 		}
@@ -124,57 +169,14 @@ class NavigatorPane {
 		final HBox itemRepresentative =
 				new HBox(10, fileName, fileSize, creationDate);
 		itemRepresentative.setUserData(file);
-//		itemRepresentative.setAlignment(Pos.CENTER);
 		navigatorPaneChildren.add(itemRepresentative);
 	}
 	
 	
 	/**
-	 * TODO: Description
+	 * Returns list of files and directories stored in {@code directory}.
 	 * 
-	 * @return
-	 */
-	static VBox getNavigatorPane() {
-		return navigatorPane;
-	}
-	
-	
-	// TODO: Check for null
-	// TODO: Check for nonexistent directory
-	/**
-	 * TODO: Description
-	 * 
-	 * @param directory
-	 */
-	static void goInto(final File directory) {
-		final List<File> files = getFileList(directory);
-		
-		if (files == null) {
-			return;
-		}
-		
-		navigatorPaneChildren.clear();
-		
-		for (final File i : files) {
-			addItem(i);
-		}
-		
-		Breadcrumbs.setBreadcrumbs(directory);
-	}
-	
-	
-	//**************************************************************************
-	//                                                                         *
-	// Methods private static                                                  *
-	//                                                                         *
-	//**************************************************************************
-	// TODO: Check for null
-	// TODO: Check for nonexistent directory
-	/**
-	 * TODO: Description
-	 * 
-	 * @param directory
-	 * @return
+	 * @param directory Directory which content needs to be listed.
 	 */
 	private static List<File> getFileList(final File directory) {
 		List<File> files = null;

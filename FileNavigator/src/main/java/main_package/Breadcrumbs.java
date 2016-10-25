@@ -49,28 +49,28 @@ class Breadcrumbs {
 	// Methods package-access static                                           *
 	//                                                                         *
 	//**************************************************************************
-	// TODO: Check for null
-	// TODO: Check for nonexistent directory
 	/**
-	 * TODO: Description
+	 * Provides a&nbsp;set of breadcrubs to specified {@code deepestDirectory}
+	 * inclusively.
 	 * 
-	 * @param lowestDirectory
+	 * @param deepestDirectory Directory to provide trace to.
 	 * 
-	 * @exception NullPointerException
+	 * @exception NullPointerException Passed argument is {@code null}.
 	 * 
-	 * @exception IllegalArgumentException
+	 * @exception IllegalArgumentException Passed argument is&nbsp;not
+	 * a&nbsp;directory.
 	 */
-	static void setBreadcrumbs(final File lowestDirectory) {
-		if (lowestDirectory == null) {
+	static void setBreadcrumbs(final File deepestDirectory) {
+		if (deepestDirectory == null) {
 			throw new NullPointerException("Passed argument is 'null'");
 		}
-		if (!(lowestDirectory.isDirectory())) {
+		if (!(deepestDirectory.isDirectory())) {
 			throw new IllegalArgumentException(
 					"Passed argument is not a directory");
 		}
 		
 		final StringTokenizer tokenizer = new StringTokenizer(
-				lowestDirectory.getAbsolutePath(), File.separator);
+				deepestDirectory.getAbsolutePath(), File.separator);
 		
 		breadcrumbs.clear();
 		
@@ -114,9 +114,7 @@ class Breadcrumbs {
 	
 	
 	/**
-	 * TODO: Description
-	 * 
-	 * @return
+	 * Returns pane representing breadcrumbs.
 	 */
 	static HBox getBreadcrumbsPane() {
 		return breadcrumbsPane;
